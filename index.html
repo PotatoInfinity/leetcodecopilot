@@ -1,3 +1,4 @@
+<!-- START OF FILE dev.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="https://github.com/user-attachments/assets/6bdb9581-3dc7-4994-857a-c59f39d74fd3">
+    <link rel="icon" type="image/png" href=icon.png>
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -21,7 +22,7 @@
             --bg-card: #ffffff;
             --border-base: rgba(0, 0, 0, 0.08);
             --text-main: #171717;
-            --text-muted: #888888; /* Lightened for the illumination effect */
+            --text-muted: #888888;
             --accent-blue: #2563eb;
             
             --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
@@ -30,11 +31,10 @@
 
             --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
             --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-liquid: cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        /* Removed scroll-behavior: smooth to allow custom physics skewing */
-        /* html { scroll-behavior: smooth; } */
         
         body {
             font-family: 'Inter', sans-serif;
@@ -54,8 +54,14 @@
             background-size: 40px 40px;
             mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
             pointer-events: none;
-            /* New: Slow movement for depth */
             animation: gridPan 60s linear infinite;
+        }
+
+        .cursor-glow {
+            position: fixed; top: 0; left: 0; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+            transform: translate(-50%, -50%); pointer-events: none; z-index: -1;
+            mix-blend-mode: multiply; transition: opacity 0.3s ease;
         }
 
         @keyframes gridPan {
@@ -70,6 +76,70 @@
             animation: pulse 8s ease-in-out infinite alternate;
         }
 
+        /* --- SCROLL SECTION --- */
+        .scroll-container { position: relative; height: 400vh; /* Increased height for slower scroll */ }
+        .sticky-wrapper {
+            position: sticky; top: 0; height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: center;
+            background: #f9fafb; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .scroll-track { 
+            display: flex; gap: 40px; 
+            padding-left: 50vw; 
+            padding-right: 50vw; /* FIX: Allows last card to reach center */
+            width: max-content;
+            will-change: transform; 
+        }
+
+        .tech-card {
+            flex: 0 0 400px; height: 250px; background: #fff; border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 20px; padding: 40px; display: flex; flex-direction: column; justify-content: center;
+            box-shadow: var(--shadow-card); transition: all 0.5s var(--ease-smooth); /* Smoother transition */
+            opacity: 0.3; filter: blur(6px); transform: scale(0.85);
+        }
+        .tech-card.in-focus {
+            opacity: 1; filter: blur(0); transform: scale(1);
+            border-color: rgba(37, 99, 235, 0.3); box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15);
+        }
+        .tech-card h4 { font-size: 2rem; color: #111; margin-bottom: 10px; letter-spacing: -0.03em; }
+        .tech-card p { color: #666; }
+
+        /* --- DETAILS SECTION --- */
+        .details-section { max-width: 1200px; margin: 0 auto; padding: 100px 24px; display: flex; gap: 60px; position: relative; }
+        .details-text { flex: 1; padding-top: 30vh; padding-bottom: 30vh; }
+        
+        .step-item {
+            min-height: 50vh; /* Height defines spacing */
+            opacity: 0.2; 
+            filter: blur(3px);
+            transform: scale(0.95);
+            transition: all 0.6s var(--ease-smooth);
+            display: flex; flex-direction: column; justify-content: center;
+            border-left: 3px solid #e5e7eb; padding-left: 30px; margin-bottom: 20px;
+        }
+        
+        /* Better active state */
+        .step-item.active { 
+            opacity: 1; 
+            filter: blur(0);
+            transform: scale(1) translateX(10px);
+            border-left-color: #000000
+        }
+        
+        .step-item h3 { font-size: 2rem; color: #111; margin-bottom: 16px; font-weight: 700; }
+        .step-item p { font-size: 1.15rem; color: #555; line-height: 1.7; }
+
+        .details-visual {
+            flex: 1; position: sticky; top: 120px; height: 500px;
+            background: #111; border: 1px solid #333; border-radius: 24px;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); align-self: flex-start;
+        }
+        .terminal-text { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; color: #e2e8f0; padding: 40px; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; }
+        .cursor-blink { display: inline-block; width: 8px; height: 18px; background: #22c55e; animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 5px; }
+        @keyframes blink { 50% { opacity: 0; } }
+
         /* --- Navbar --- */
         .nav-wrapper {
             position: fixed; top: 24px; width: 100%; display: flex; justify-content: center; z-index: 100;
@@ -79,7 +149,7 @@
         .nav-pill {
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px);
             border: 1px solid rgba(0,0,0,0.06); padding: 5px; border-radius: 100px;
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; gap: 12px;
             box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05);
         }
 
@@ -90,14 +160,16 @@
         }
         .logo:hover { opacity: 0.7; }
 
-        .nav-links {
-            position: relative; display: flex; background: rgba(0,0,0,0.03); border-radius: 100px; padding: 3px;
+        .nav-group {
+            position: relative; display: flex; background: rgba(0,0,0,0.03); 
+            border-radius: 100px; padding: 3px;
         }
 
         .nav-highlight {
             position: absolute; top: 3px; left: 3px; height: calc(100% - 6px);
             background: #fff; border-radius: 100px;
-            transition: all 0.3s var(--ease-smooth); opacity: 0; width: 0; pointer-events: none;
+            transition: width 0.5s var(--ease-liquid), transform 0.5s var(--ease-liquid), opacity 0.2s;
+            opacity: 0; width: 0; pointer-events: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
@@ -109,90 +181,54 @@
         .nav-link.active, .nav-link:hover { color: #000; }
 
         .nav-btn {
-            font-size: 0.85rem; font-weight: 500; background: #171717; color: #fff;
+            font-size: 0.85rem; font-weight: 500; background: #000000; color: #fff;
             padding: 8px 18px; border-radius: 100px; margin-left: 4px;
             text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
             display: flex; align-items: center; gap: 6px;
         }
         .nav-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 
-        /* --- Modals (Popups) --- */
+        /* --- Modals --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4); 
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px);
             z-index: 1000; display: flex; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
         }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
-
         .modal-window {
             width: 90%; max-width: 700px; max-height: 85vh;
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 24px;
             box-shadow: var(--shadow-modal);
             transform: scale(0.95) translateY(10px);
             transition: transform 0.4s var(--ease-elastic), opacity 0.3s ease;
-            display: flex; flex-direction: column;
-            opacity: 0;
+            display: flex; flex-direction: column; opacity: 0;
         }
-        
-        .modal-overlay.active .modal-window {
-            transform: scale(1) translateY(0);
-            opacity: 1;
-        }
-
-        .modal-header {
-            padding: 20px 30px; border-bottom: 1px solid rgba(0,0,0,0.06);
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        .modal-overlay.active .modal-window { transform: scale(1) translateY(0); opacity: 1; }
+        .modal-header { padding: 20px 30px; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
         .modal-title { font-weight: 600; font-size: 1.1rem; }
-        .close-modal {
-            background: rgba(0,0,0,0.05); border: none; border-radius: 50%;
-            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: background 0.2s; color: #555;
-        }
+        .close-modal { background: rgba(0,0,0,0.05); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; color: #555; }
         .close-modal:hover { background: rgba(0,0,0,0.1); color: #000; }
-
-        .modal-body {
-            padding: 30px; overflow-y: auto; color: var(--text-main);
-            font-size: 0.95rem;
-        }
+        .modal-body { padding: 30px; overflow-y: auto; color: var(--text-main); font-size: 0.95rem; }
         .modal-body::-webkit-scrollbar { width: 8px; }
         .modal-body::-webkit-scrollbar-track { background: transparent; }
         .modal-body::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
-        .modal-body::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 
         .doc-block { margin-bottom: 24px; }
         .doc-block h2 { font-size: 1.2rem; margin-bottom: 12px; color: #000; }
         .doc-block h3 { font-size: 1rem; margin-bottom: 8px; font-weight: 600; }
         .doc-block p { margin-bottom: 12px; color: #444; }
-        .doc-block ul { padding-left: 20px; margin-bottom: 12px; color: #444; }
-        .doc-block li { margin-bottom: 6px; }
-        .doc-block img { max-width: 100%; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); margin: 12px 0; }
-        
-        .code-snippet {
-            background: #1e1e1e; color: #e5e5e5; font-family: 'JetBrains Mono', monospace;
-            padding: 12px 16px; border-radius: 8px; font-size: 0.85rem; overflow-x: auto;
-            margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .license-text {
-            font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #444;
-            white-space: pre-wrap; line-height: 1.5;
-        }
+        .code-snippet { background: #1e1e1e; color: #e5e5e5; font-family: 'JetBrains Mono', monospace; padding: 12px 16px; border-radius: 8px; font-size: 0.85rem; overflow-x: auto; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.1); }
+        .license-text { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #444; white-space: pre-wrap; line-height: 1.5; }
 
-        /* --- Scroll Distortion Wrapper --- */
-        /* This class is applied via JS/HTML to sections that should skew */
-        .skew-container {
-            transform-origin: center center;
-            will-change: transform;
-            transition: transform 0.1s linear; /* Small lag for smoothness */
-        }
+        /* --- General Utils --- */
+        .skew-container { transform-origin: center center; will-change: transform; transition: transform 0.1s linear; }
+        .reveal-on-scroll { opacity: 0; filter: blur(10px); transform: translateY(20px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-on-scroll.visible { opacity: 1; filter: blur(0); transform: translateY(0); }
 
-        /* --- Hero, Features, Footer --- */
+        /* --- Hero Section --- */
         .hero-section {
             padding-top: 160px; min-height: 100vh; text-align: center;
             display: flex; flex-direction: column; align-items: center; position: relative;
@@ -203,61 +239,48 @@
             background: rgba(59, 130, 246, 0.08); color: var(--accent-blue); 
             border: 1px solid rgba(59, 130, 246, 0.2);
             margin-bottom: 32px; animation: fadeUp 0.8s ease forwards;
-            cursor: default; transition: transform 0.2s;
         }
         .version-badge span { width: 6px; height: 6px; background: var(--accent-blue); border-radius: 50%; box-shadow: 0 0 8px var(--accent-blue); }
         
-        /* New: Heading Reveal Animation */
-        .reveal-on-scroll {
-            opacity: 0;
-            filter: blur(10px);
-            transform: translateY(20px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal-on-scroll.visible {
-            opacity: 1;
-            filter: blur(0);
-            transform: translateY(0);
-        }
-
-        h1 {
-            font-size: clamp(3rem, 7vw, 4.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; color: #0a0a0a;
-            margin-bottom: 24px;
-        }
-        h1 span {
-            background: linear-gradient(to right, #2563eb, #9333ea);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        
-        p.lead {
-            font-size: 1.15rem; color: var(--text-muted); max-width: 580px; margin: 0 auto 48px;
-            opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s; text-wrap: balance;
-        }
-        
-        .cta-group {
-            display: flex; gap: 12px; justify-content: center; margin-bottom: 100px;
-            opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s;
-        }
-        .btn {
-            position: relative; padding: 14px 32px; border-radius: 12px; font-size: 0.95rem; font-weight: 500;
-            cursor: pointer; transition: transform 0.2s; text-decoration: none; overflow: hidden;
-        }
-        .btn-primary { 
-            background: #171717; color: #fff; border: 1px solid #171717; 
+        h1 { font-size: clamp(3rem, 7vw, 4.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; color: #0a0a0a; margin-bottom: 24px; }
+        h1 span { background: linear-gradient(to right, #2563eb, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p.lead { font-size: 1.15rem; color: var(--text-muted); max-width: 580px; margin: 0 auto 48px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.4s; text-wrap: balance; }
+        .cta-group { display: flex; gap: 12px; justify-content: center; margin-bottom: 100px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.6s; }
+        .btn { position: relative; padding: 14px 32px; border-radius: 12px; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: transform 0.2s; text-decoration: none; overflow: hidden; }
+                .btn-primary { 
+            background: #171717; 
+            color: #fff; 
+            border: 1px solid #171717; 
             box-shadow: 0 10px 20px -10px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 24px -10px rgba(0,0,0,0.4); }
-        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 3s infinite;
+        }
+        .btn-primary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 14px 24px -10px rgba(0,0,0,0.4);
+            animation: none;
+        }
+        .btn-primary:hover::before {
+            animation: shine 0.6s ease-in-out !important;
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
         /* Perspective 3D */
-        .perspective-container {
-            perspective: 1200px; width: 100%; max-width: 1000px; margin: 0 auto;
-            padding: 0 20px; opacity: 0; animation: fadeUp 1s ease forwards 0.8s;
-        }
-        .browser-mockup {
-            background: #fff; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 20px 60px -20px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.02);
-            overflow: hidden; transform-style: preserve-3d; will-change: transform;
-        }
+        .perspective-container { perspective: 1200px; width: 100%; max-width: 1000px; margin: 0 auto; padding: 0 20px; opacity: 0; animation: fadeUp 1s ease forwards 0.8s; }
+        .browser-mockup { background: #fff; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 20px 60px -20px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.02); overflow: hidden; transform-style: preserve-3d; will-change: transform; transform: rotateX(20deg); transition: transform 0.12s ease-out; }
         .toolbar { height: 44px; background: #f9fafb; border-bottom: 1px solid #e5e5e5; display: flex; align-items: center; padding: 0 16px; gap: 8px; }
         .traffic-light { width: 10px; height: 10px; border-radius: 50%; background: #ddd; }
         .traffic-light.r { background: #ff5f56; } .traffic-light.y { background: #ffbd2e; } .traffic-light.g { background: #27c93f; }
@@ -266,65 +289,30 @@
         .ui-sidebar { width: 60px; border-right: 1px solid #f0f0f0; height: 100%; background: #fafafa; }
         .ui-main { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .ui-skeleton { width: 100%; max-width: 400px; height: 12px; background: #f0f0f0; margin-bottom: 12px; border-radius: 4px; }
-        .copilot-overlay {
-            position: absolute; right: 30px; top: 60px; width: 320px;
-            background: #1e1e1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
-            padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35);
-            animation: float 6s ease-in-out infinite; transform-style: preserve-3d;
-        }
+        .copilot-overlay { position: absolute; right: 30px; top: 60px; width: 320px; background: #1e1e1e; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35); animation: float 6s ease-in-out infinite; transform-style: preserve-3d; }
         .copilot-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-weight: 600; font-size: 0.9rem; color: #fff; }
         .code-lines { font-family: 'JetBrains Mono'; font-size: 11px; color: #a1a1aa; line-height: 1.7; }
 
-        /* Bento Grid */
+        /* Features & Cards */
         .features-section { padding: 160px 24px; max-width: 1150px; margin: 0 auto; }
         .section-header { text-align: center; margin-bottom: 80px; }
         .section-header h2 { font-size: 2.5rem; letter-spacing: -0.03em; margin-bottom: 16px; color: #111; }
         .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        .card {
-            background: var(--bg-card); border: 1px solid rgba(0,0,0,0.06); border-radius: 24px;
-            padding: 36px; position: relative; overflow: hidden; cursor: default;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            display: flex; flex-direction: column; justify-content: space-between; min-height: 300px;
-            box-shadow: var(--shadow-card); transform-style: preserve-3d;
-        }
+        .card { background: var(--bg-card); border: 1px solid rgba(0,0,0,0.06); border-radius: 24px; padding: 36px; position: relative; overflow: hidden; cursor: default; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); display: flex; flex-direction: column; justify-content: space-between; min-height: 300px; box-shadow: var(--shadow-card); transform-style: preserve-3d; }
         .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: rgba(0,0,0,0.1); }
         .card.wide { grid-column: span 2; }
         .card-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; pointer-events: none;}
-        
-        .icon-box {
-            width: 52px; height: 52px; background: #f3f4f6;
-            border: 1px solid rgba(0,0,0,0.05); border-radius: 14px;
-            display: flex; align-items: center; justify-content: center; margin-bottom: auto; color: #171717;
-            transition: transform 0.3s ease;
-        }
+        .icon-box { width: 52px; height: 52px; background: #f3f4f6; border: 1px solid rgba(0,0,0,0.05); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: auto; color: #171717; transition: transform 0.3s ease; }
         .card:hover .icon-box { transform: scale(1.1) rotate(5deg); background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.05); color: var(--accent-blue); }
         .card h3 { font-size: 1.35rem; margin: 24px 0 12px; color: #111; font-weight: 700; letter-spacing: -0.02em; }
-        
-        /* New: Text Illumination */
-        .illuminate-text {
-            font-size: 1rem; color: var(--text-muted); line-height: 1.6;
-            transition: color 0.5s ease;
-        }
-        .illuminate-text.active { color: #171717; } /* Lights up to black */
+        .illuminate-text { font-size: 1rem; color: var(--text-muted); line-height: 1.6; transition: color 0.5s ease; }
+        .illuminate-text.active { color: #171717; }
 
         /* Footer */
         footer { border-top: 1px solid var(--border-base); padding: 100px 24px 40px; background: #fff; text-align: center; position: relative; overflow: hidden; }
-        
-        .copy-command {
-            background: #fff; border: 1px solid #e5e5e5; padding: 16px 28px;
-            border-radius: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #555;
-            display: inline-flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; margin-bottom: 60px;
-        }
+        .copy-command { background: #fff; border: 1px solid #e5e5e5; padding: 16px 28px; border-radius: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #555; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; margin-bottom: 60px; }
         .copy-command:hover { border-color: #ccc; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1); transform: translateY(-2px); }
-        
-        /* New: Enhanced Copy State */
-        .copy-command.copied { 
-            border-color: #10b981; 
-            background: rgba(16, 185, 129, 0.05);
-            transform: scale(1.05); /* Gentle bounce */
-            color: #059669;
-        }
-
+        .copy-command.copied { border-color: #10b981; background: rgba(16, 185, 129, 0.05); transform: scale(1.05); color: #059669; }
         .footer-bottom { display: flex; justify-content: space-between; align-items: center; max-width: 1150px; margin: 0 auto; padding-top: 40px; border-top: 1px solid #f0f0f0; }
         .footer-text { color: #888; font-size: 0.85rem; font-weight: 500; }
         .social-link { color: #888; transition: 0.2s; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; }
@@ -338,48 +326,91 @@
         @media (max-width: 768px) {
             .bento-grid { grid-template-columns: 1fr; }
             .card.wide { grid-column: span 1; }
-            .nav-links { display: none; }
+            .nav-group { display: none; }
             h1 { font-size: 2.8rem; }
             .browser-mockup { display: none; }
             .modal-window { width: 95%; }
+            .details-section { flex-direction: column; gap: 40px; }
+            .details-visual { position: relative; top: 0; height: 400px; width: 100%; order: -1; }
+            .step-item { min-height: auto; padding-bottom: 40px; opacity: 1; border-left: 1px solid #eee; filter: none; transform: none; }
+            .step-item.active { border-left-color: var(--accent-blue); }
+            .scroll-track { padding-left: 20px; padding-right: 20px; }
+        }
+        .final-cta-section {
+            height: 150vh; 
+            position: relative;
+            background: var(--bg-page);
+            z-index: 10;
+        }
+
+        .final-cta-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .final-cta-text {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 800;
+            text-align: center;
+            line-height: 1;
+            color: #000;
+            opacity: 0; /* Hidden initially */
+            transform: scale(0.8) translateY(50px);
+            filter: blur(20px);
+            will-change: opacity, transform, filter;
+            letter-spacing: -0.05em;
+        }
+        
+        /* Optional: A gradient mask to make it look metallic */
+        .final-cta-text span {
+            background: linear-gradient(to bottom, #000000, #666666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
 <body>
 
     <div class="bg-grid"></div>
+    <div class="cursor-glow"></div>
     <div class="glow-orb" style="top: -30%; left: 50%; transform: translateX(-50%);"></div>
     
     <!-- Navbar -->
     <div class="nav-wrapper">
         <nav class="nav-pill">
             <div class="logo" id="logoBtn">
-                <img src="https://github.com/user-attachments/assets/6bdb9581-3dc7-4994-857a-c59f39d74fd3" alt="image" style="width: 28px; height: 28px; border-radius: 4px;">
+                <img src="icon.png" alt="image" style="width: 28px; height: 28px; border-radius: 4px;">
                 <span>Copilot</span>
             </div>
             
-            <div class="nav-links">
+            <div class="nav-group" id="mainNav">
                 <div class="nav-highlight"></div>
-                <a href="#hero" class="nav-link active magnet-target">Overview</a>
-                <a href="#features" class="nav-link magnet-target">Features</a>
-                <a href="#" onclick="openModal('docsModal'); return false;" class="nav-link magnet-target">Docs</a>
-                <a href="#" onclick="openModal('licenseModal'); return false;" class="nav-link magnet-target">License</a>
+                <a href="#hero" class="nav-link active">Overview</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#workflow" class="nav-link">Workflow</a>
             </div>
 
-            <a href="https://github.com/PotatoInfinity/LeetCode-Copilot" target="_blank" class="nav-btn magnet-target">
+            <div class="nav-group" id="secNav">
+                <a href="#" onclick="openModal('docsModal'); return false;" class="nav-link">Docs</a>
+                <a href="#" onclick="openModal('licenseModal'); return false;" class="nav-link">License</a>
+            </div>
+
+            <a href="https://github.com/PotatoInfinity/LeetCode-Copilot" target="_blank" class="nav-btn">
                 <i data-lucide="Star" size="14" style="fill: #EAB308; color: #EAB308;"></i> 
                 <span>Star on Github</span>
             </a>
         </nav>
     </div>
 
-    <!-- Wrap sections in class "skew-container" for the scroll velocity effect -->
-    
     <!-- Hero -->
     <section class="hero-section skew-container" id="hero">
         <div class="version-badge"><span></span> v3.1.0 Available</div>
 
-        <!-- Added reveal-on-scroll class -->
         <h1 class="reveal-on-scroll">Code smarter.<br><span>Not harder.</span></h1>
         <p class="lead reveal-on-scroll">
             The open-source extension that integrates optimal solutions powered by Google Gemini directly into your LeetCode workflow.
@@ -421,7 +452,7 @@
     <!-- Features -->
     <section class="features-section skew-container" id="features">
         <div class="section-header">
-            <h2 class="reveal-on-scroll">Built for Speed</h2>
+            <h2 class="reveal-on-scroll">Engineered for Speed</h2>
             <p style="color:var(--text-muted)" class="reveal-on-scroll">With everything you need!</p>
         </div>
         <div class="bento-grid">
@@ -429,7 +460,6 @@
                 <div class="card-content">
                     <div class="icon-box"><i data-lucide="cpu"></i></div>
                     <h3>Gemini 2.5 Intelligence</h3>
-                    <!-- Added illuminate-text class -->
                     <p class="scramble-text illuminate-text" data-value="Leverages Google's latest efficient model. It understands problem constraints and generates Big-O optimal code in seconds.">Leverages Google's latest efficient model...</p>
                 </div>
             </div>
@@ -457,6 +487,71 @@
         </div>
     </section>
 
+    <!-- Horizontal Scroll Section -->
+    <div class="scroll-container">
+        <div class="sticky-wrapper">
+            <div style="max-width:1200px; margin:0 auto; padding:0 24px; width:100%; margin-bottom:40px; text-align:center;">
+                <h2 style="font-size:2rem; color:#111; margin-bottom: 10px;">Native Integration</h2>
+                <p style="color:#666">Works where you work. Automatically adapts to your language.</p>
+            </div>
+            <div class="scroll-track" id="scrollTrack">
+                <div class="tech-card">
+                    <div style="margin-bottom:20px"><i data-lucide="code-2" size="32" color="#2563eb"></i></div>
+                    <h4>Python</h4>
+                    <p>Generates clean, pythonic list comprehensions and dictionary maps optimized for readability.</p>
+                </div>
+                <div class="tech-card">
+                    <div style="margin-bottom:20px"><i data-lucide="coffee" size="32" color="#eab308"></i></div>
+                    <h4>Java</h4>
+                    <p>Handles verbose boilerplate, util imports, and type definitions automatically.</p>
+                </div>
+                <div class="tech-card">
+                    <div style="margin-bottom:20px"><i data-lucide="binary" size="32" color="#3b82f6"></i></div>
+                    <h4>C++</h4>
+                    <p>Optimized STL usage and memory management suggestions (pointers/references).</p>
+                </div>
+                <div class="tech-card">
+                    <div style="margin-bottom:20px"><i data-lucide="braces" size="32" color="#16a34a"></i></div>
+                    <h4>JavaScript</h4>
+                    <p>Modern ES6+ syntax tailored for frontend interviews (Map, Set, Arrow Functions).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Section -->
+    <section class="details-section skew-container" id="workflow">
+        <div class="details-text">
+            <div class="step-item" data-step="1">
+                <h3>1. Connect API</h3>
+                <p>Paste your free Google Gemini API key into the extension popup. It stays secure on your machine and is never sent to our servers.</p>
+            </div>
+            <div class="step-item" data-step="2">
+                <h3>2. Open Problem</h3>
+                <p>Navigate to any LeetCode URL. The extension automatically detects the problem context, descriptions, and active coding language.</p>
+            </div>
+            <div class="step-item" data-step="3">
+                <h3>3. One-Click Solve</h3>
+                <p>Click "Get Solution" to receive optimal code with edge case warnings directly in a sleek sidebar.</p>
+            </div>
+        </div>
+        <div class="details-visual">
+            <div class="terminal-text">
+                <div id="terminalContent"></div>
+                <span class="cursor-blink"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Spacer & Reveal Section -->
+    <div class="final-cta-section" id="finalCta">
+        <div class="final-cta-sticky">
+            <div class="final-cta-text" id="ctaText">
+                <span>Get started now</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="skew-container">
         <div class="glow-orb" style="bottom: -50%; left: 50%; width: 1000px; height: 600px; transform: translateX(-50%); opacity: 0.5; background: radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%);"></div>
@@ -468,60 +563,68 @@
         <div class="footer-bottom">
             <span class="footer-text">&copy; November 2025 LeetCode Copilot. GNU 3.0 License.</span>
             <div style="display:flex; gap:12px;">
-                <a href="#" class="social-link magnet-target"><i data-lucide="github" size="18"></i></a>
+                <a href="https://github.com/PotatoInfinity/LeetCode-Copilot" class="social-link magnet-target"><i data-lucide="github" size="18"></i></a>
             </div>
         </div>
     </footer>
 
-    <!-- === MODAL OVERLAYS === -->
+    <!-- Modals -->
     <div id="docsModal" class="modal-overlay">
         <div class="modal-window">
             <div class="modal-header">
                 <div class="modal-title">Documentation</div>
-                <button class="close-modal" onclick="closeModal('docsModal')">
-                    <i data-lucide="x" size="16"></i>
-                </button>
+                <button class="close-modal" onclick="closeModal('docsModal')"><i data-lucide="x" size="16"></i></button>
             </div>
             <div class="modal-body">
-                <div class="doc-block">
-                    <h2>LeetCode-Copilot</h2>
-                    <p>An extension that helps you solve LeetCode problems with AI-powered suggestions.</p>
-                    <img src="https://github.com/user-attachments/assets/6bdb9581-3dc7-4994-857a-c59f39d74fd3" alt="App Screenshot" style="border:1px solid #eee;">
-                </div>
-                <div class="doc-block">
-                    <h2>Installation</h2>
-                    <h3>1. Clone the repository</h3>
-                    <div class="code-snippet">git clone https://github.com/PotatoInfinity/LeetCode-Copilot.git</div>
+                <div class="doc-block" style="line-height:1.6;">
+                    <h2 style="margin-bottom: 12px;">Installation Guide</h2>
+
+                    <h3>1. Clone the Repository</h3>
+                    <p>Open Command Prompt (or Terminal on macOS) and run:</p>
+                    <div class="code-snippet" style="background:#1e1e1e; color:#fff; padding:10px 14px; border-radius:6px; font-family:monospace; font-size:14px; margin:10px 0; overflow-x:auto;">
+                        git clone https://github.com/PotatoInfinity/LeetCode-Copilot.git
+                    </div>
+
                     <h3>2. Get a Google Gemini API Key</h3>
-                    <p>Generate one from <a href="https://aistudio.google.com/api-keys" target="_blank" style="color:var(--accent-blue)">Google AI Studio</a>.</p>
-                    <h3>3. Load the extension in Chrome</h3>
-                    <ul>
+                    <p>Generate one from <a href="https://aistudio.google.com/api-keys" target="_blank" style="color:var(--accent-blue);">Google AI Studio</a>.</p>
+
+                    <h3>3. Load the Extension in Chrome</h3>
+                    <ul style="padding-left:20px;">
                         <li>Open <b>chrome://extensions/</b></li>
-                        <li>Enable <b>Developer mode</b> (top-right)</li>
+                        <li>Enable <b>Developer mode</b> (top-right corner)</li>
                         <li>Click <b>Load unpacked</b></li>
                         <li>Select the cloned <code>LeetCode-Copilot</code> folder</li>
                     </ul>
-                    <h3>4. Enter your API Key</h3>
-                    <ul>
-                        <li>Click the LeetCode-Copilot extension icon in Chrome</li>
+
+                    <h3>4. Enter Your API Key</h3>
+                    <ul style="padding-left:20px;">
+                        <li>Click the LeetCode-Copilot extension icon</li>
                         <li>Paste your Gemini API key</li>
                     </ul>
+
+                    <h3>5. Usage</h3>
+                    <ul style="padding-left:20px;">
+                        <li>Open LeetCode</li>
+                        <li>Click the <b>Solve</b> button</li>
+                        <li>A smart suggestion sidebar will appear — powered by your Gemini key</li>
+                    </ul>
+
+                    <h3 style="margin-top:18px;">
+                        Feel free to fork this repository and improve it — your contributions are greatly appreciated! 😀
+                    </h3>
                 </div>
             </div>
         </div>
     </div>
-
     <div id="licenseModal" class="modal-overlay">
         <div class="modal-window">
             <div class="modal-header">
                 <div class="modal-title">GNU General Public License v3.0</div>
-                <button class="close-modal" onclick="closeModal('licenseModal')">
-                    <i data-lucide="x" size="16"></i>
-                </button>
+                <button class="close-modal" onclick="closeModal('licenseModal')"><i data-lucide="x" size="16"></i></button>
             </div>
             <div class="modal-body">
                 <div class="license-text">
-                    GNU GENERAL PUBLIC LICENSE
+                      GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
@@ -1195,6 +1298,7 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <https://www.gnu.org/licenses/why-not-lgpl.html>.
+
                 </div>
             </div>
         </div>
@@ -1203,79 +1307,168 @@ Public License instead of this License.  But first, please read
     <script>
         lucide.createIcons();
 
-        // --- NEW: Scroll Velocity Distortion (Skew) ---
+        // Cursor Glow
+        const cursorGlow = document.querySelector('.cursor-glow');
+        let cursorX = 0, cursorY = 0;
+        let currentX = 0, currentY = 0;
+        document.addEventListener('mousemove', (e) => { cursorX = e.clientX; cursorY = e.clientY; });
+        function animateCursor() {
+            currentX += (cursorX - currentX) * 0.1;
+            currentY += (cursorY - currentY) * 0.1;
+            cursorGlow.style.left = `${currentX}px`;
+            cursorGlow.style.top = `${currentY}px`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Scroll + Focus + Cards
+        const stickySection = document.querySelector('.scroll-container');
+        const scrollTrack = document.getElementById('scrollTrack');
+        const techCards = document.querySelectorAll('.tech-card');
+        
+        function animateHorizontalScroll() {
+            if (!stickySection || !scrollTrack) return;
+            const rect = stickySection.getBoundingClientRect();
+            const sectionHeight = stickySection.offsetHeight - window.innerHeight;
+            let scrollDistance = -rect.top;
+            let progress = Math.max(0, Math.min(1, scrollDistance / sectionHeight));
+            
+            const trackWidth = scrollTrack.scrollWidth;
+            const viewportCenter = window.innerWidth / 2;
+            const maxTranslate = trackWidth - window.innerWidth;
+            const translateX = progress * maxTranslate;
+            
+            scrollTrack.style.transform = `translateX(-${translateX}px)`;
+            
+            techCards.forEach(card => {
+                const cardRect = card.getBoundingClientRect();
+                const cardCenter = cardRect.left + (cardRect.width / 2);
+                const distanceFromCenter = Math.abs(viewportCenter - cardCenter);
+                
+                // Threshold to focus
+                if (distanceFromCenter < 300) card.classList.add('in-focus');
+                else card.classList.remove('in-focus');
+            });
+            
+            requestAnimationFrame(animateHorizontalScroll);
+        }
+        animateHorizontalScroll();
+
+        // Navigation Highlight Logic
+        const sections = document.querySelectorAll('section');
+        const mainNavContainer = document.getElementById('mainNav');
+        const navLinks = mainNavContainer.querySelectorAll('.nav-link');
+        const highlight = mainNavContainer.querySelector('.nav-highlight');
+
+        function updateNav() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 400) current = section.getAttribute('id');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                    const rect = link.getBoundingClientRect();
+                    const containerRect = mainNavContainer.getBoundingClientRect();
+                    highlight.style.width = `${rect.width}px`;
+                    highlight.style.transform = `translateX(${rect.left - containerRect.left}px)`;
+                    highlight.style.opacity = '1';
+                }
+            });
+        }
+        window.addEventListener('scroll', updateNav);
+        setTimeout(updateNav, 100);
+
+        // Terminal & Steps (Improved Scroll Logic)
+        const steps = document.querySelectorAll('.step-item');
+        const terminalContent = document.getElementById('terminalContent');
+        const terminalMessages = {
+            1: "> Checking environment...\n> Secure Storage detected.\n> Waiting for API Key...\n> Key received. Validating...\n> Connection established [200 OK].",
+            2: "> Detecting active tab...\n> LeetCode URL found: /problems/two-sum\n> Parsing problem description...\n> Reading constraints...\n> Context loaded.",
+            3: "> Model: Gemini 2.5 Flash\n> Thinking...\n> Analyzing Time Complexity: O(n)\n> Generating Python solution...\n> Code generated successfully."
+        };
+        let currentStep = 0;
+        
+        // Use rootMargin to trigger exactly in the middle of the screen
+        const stepObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    const step = parseInt(entry.target.dataset.step);
+                    if(step !== currentStep) {
+                        steps.forEach(s => s.classList.remove('active'));
+                        entry.target.classList.add('active');
+                        typewriterEffect(terminalMessages[step]);
+                        currentStep = step;
+                    }
+                }
+            });
+        }, { rootMargin: "-45% 0px -45% 0px" }); // Triggers when element hits the middle stripe
+        
+        steps.forEach(step => stepObserver.observe(step));
+        
+        function typewriterEffect(text) {
+            terminalContent.innerHTML = "";
+            let i = 0;
+            const lines = text.split('\n');
+            let currentLine = 0;
+            function typeChar() {
+                if (currentLine < lines.length) {
+                    const line = lines[currentLine];
+                    const p = document.createElement('div');
+                    p.style.marginBottom = "8px";
+                    p.style.color = currentLine === lines.length -1 ? "#4ade80" : "#e2e8f0";
+                    terminalContent.appendChild(p);
+                    p.innerText = line;
+                    currentLine++;
+                    setTimeout(typeChar, 100);
+                }
+            }
+            typeChar();
+        }
+
+        // Existing Utils
         const skewContainers = document.querySelectorAll('.skew-container');
         let currentPos = window.scrollY;
         let skew = 0;
-        
         function loop() {
             const newPos = window.scrollY;
             const diff = newPos - currentPos;
-            
-            // Calculate skew based on speed, clamped to prevent extreme distortion
             const targetSkew = Math.min(Math.max(diff * 0.03, -2), 2);
-            
-            // Linear interpolation (Lerp) for smooth settling
             skew = skew * 0.9 + targetSkew * 0.1;
-            
-            // Apply to containers (avoiding fixed nav)
-            skewContainers.forEach(el => {
-                el.style.transform = `skewY(${skew}deg)`;
-            });
-
+            skewContainers.forEach(el => el.style.transform = `skewY(${skew}deg)`);
             currentPos = newPos;
             requestAnimationFrame(loop);
         }
         loop();
 
-        // --- NEW: Heading Reveal & Text Illumination ---
         const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
+            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
         }, { threshold: 0.1 });
-
         const illuminateObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                } else {
-                    entry.target.classList.remove('active');
-                }
-            });
-        }, { rootMargin: "-20% 0px -20% 0px" }); // Trigger when text is in middle 60% of screen
-
+            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('active'); else entry.target.classList.remove('active'); });
+        }, { rootMargin: "-20% 0px -20% 0px" });
         document.querySelectorAll('.reveal-on-scroll').forEach(el => revealObserver.observe(el));
         document.querySelectorAll('.illuminate-text').forEach(el => illuminateObserver.observe(el));
 
+        function openModal(id) { document.getElementById(id)?.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeModal(id) { document.getElementById(id)?.classList.remove('active'); document.body.style.overflow = ''; }
+        window.addEventListener('click', (e) => { if (e.target.classList.contains('modal-overlay')) closeModal(e.target.id); });
+        window.addEventListener('keydown', (e) => { if(e.key === 'Escape') { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active')); document.body.style.overflow = ''; }});
 
-        // --- Existing Logic (Modals, Mockup, Magnet, Scramble) ---
-        function openModal(id) {
-            const modal = document.getElementById(id);
-            if(modal) {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-        function closeModal(id) {
-            const modal = document.getElementById(id);
-            if(modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
-        window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) closeModal(e.target.id);
+        const copyBtn = document.getElementById('copyBtn');
+        const commandText = document.getElementById('commandText');
+        const copyFeedback = document.getElementById('copyFeedback');
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(commandText.innerText).then(() => {
+                copyBtn.classList.add('copied');
+                const originalText = commandText.innerText;
+                commandText.innerText = "Copied to clipboard!";
+                const originalIcon = copyFeedback.innerHTML;
+                setTimeout(() => { commandText.innerText = originalText; copyBtn.classList.remove('copied'); copyFeedback.innerHTML = originalIcon; copyFeedback.style.opacity = "0.5"; }, 2000);
+            });
         });
-        window.addEventListener('keydown', (e) => {
-            if(e.key === 'Escape') {
-                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-                document.body.style.overflow = '';
-            }
-        });
-        document.getElementById('logoBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
         const cards = document.querySelectorAll('.tilt-card');
         cards.forEach(card => {
@@ -1289,28 +1482,19 @@ Public License instead of this License.  But first, please read
                 const rotateY = ((x - centerX) / centerX) * 4;
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
             });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
-            });
+            card.addEventListener('mouseleave', () => card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)');
         });
 
-        const mockup = document.getElementById('mockup');
-        let mouseX = 0, mouseY = 0;
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-            mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+        const magnets = document.querySelectorAll('.magnet-target');
+        magnets.forEach(magnet => {
+            magnet.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                this.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+            });
+            magnet.addEventListener('mouseleave', function() { this.style.transform = 'translate(0px, 0px)'; });
         });
-        function animateMockup() {
-            const scrollY = window.scrollY;
-            const progress = Math.min(scrollY / 800, 1);
-            const baseRotateX = 15 * (1 - progress); 
-            const scale = 0.95 + (0.05 * progress);
-            if(window.innerWidth > 768 && mockup) {
-                mockup.style.transform = `rotateX(${baseRotateX + (mouseY * -3)}deg) rotateY(${mouseX * 3}deg) scale(${scale})`;
-            }
-            requestAnimationFrame(animateMockup);
-        }
-        animateMockup();
 
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%";
         function scrambleText(element) {
@@ -1339,72 +1523,96 @@ Public License instead of this License.  But first, please read
         }, { threshold: 0.2 });
         document.querySelectorAll('.scramble-text').forEach(el => textObserver.observe(el));
 
-        const magnets = document.querySelectorAll('.magnet-target');
-        magnets.forEach(magnet => {
-            magnet.addEventListener('mousemove', function(e) {
-                const rect = this.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                this.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-            });
-            magnet.addEventListener('mouseleave', function() {
-                this.style.transform = 'translate(0px, 0px)';
-            });
-        });
+        // --- 3D Tilt for Mockup (hero) ---
+        (function(){
+            const heroSection = document.getElementById('hero');
+            const mockup = document.getElementById('mockup');
+            if(!heroSection || !mockup) return;
 
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('.nav-links .nav-link');
-        const highlight = document.querySelector('.nav-highlight');
-        const navContainer = document.querySelector('.nav-links');
-        function updateNav() {
-            let current = '';
-            sections.forEach(section => {
-                if (scrollY >= section.offsetTop - 300) current = section.getAttribute('id');
-            });
-            navLinks.forEach(link => {
-                if (!link.getAttribute('href').startsWith('#') || link.getAttribute('href') === '#') return; 
-                link.classList.remove('active');
-                if (link.getAttribute('href').includes(current)) {
-                    link.classList.add('active');
-                    const rect = link.getBoundingClientRect();
-                    const containerRect = navContainer.getBoundingClientRect();
-                    highlight.style.width = `${rect.width}px`;
-                    highlight.style.transform = `translateX(${rect.left - containerRect.left}px)`;
-                    highlight.style.opacity = '1';
+            // subtle smoothing for transform updates
+            let rafId = null;
+            let lastX = 0, lastY = 0;
+
+            function applyTilt(clientX, clientY) {
+                if(window.innerWidth < 768) {
+                    mockup.style.transform = 'rotateX(20deg) rotateY(0deg)';
+                    return;
                 }
+
+                const { innerWidth, innerHeight } = window;
+                const rotateY = ((clientX / innerWidth) - 0.5) * 10; // +/-5-10deg
+                const rotateX = ((clientY / innerHeight) - 0.5) * -10 + 20; // base 20deg like design
+
+                // compose transform: preserve perspective and subtle scale
+                mockup.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
+            }
+
+            heroSection.addEventListener('mousemove', (e) => {
+                lastX = e.clientX; lastY = e.clientY;
+                if(rafId) cancelAnimationFrame(rafId);
+                rafId = requestAnimationFrame(() => applyTilt(lastX, lastY));
             });
+
+            heroSection.addEventListener('mouseleave', () => {
+                // return to base rotation used in CSS
+                mockup.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                mockup.style.transform = 'rotateX(20deg) rotateY(0deg)';
+                setTimeout(() => mockup.style.transition = 'transform 0.12s ease-out', 420);
+            });
+
+            // ensure correct state on resize
+            window.addEventListener('resize', () => {
+                if(window.innerWidth < 768) mockup.style.transform = '';
+                else mockup.style.transform = 'rotateX(20deg) rotateY(0deg)';
+            });
+        })();
+      // --- Final CTA Scroll Animation ---
+        const ctaSection = document.getElementById('finalCta');
+        const ctaText = document.getElementById('ctaText');
+
+        function animateCta() {
+            if (!ctaSection || !ctaText) return;
+
+            const rect = ctaSection.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            
+            // Calculate how far we are into the section (0 to 1)
+            // We use a larger range to ensure it finishes before the footer completely arrives
+            let progress = (windowHeight - rect.top) / (rect.height);
+            
+            // 1. The "Blank" Phase (0% to 30% scroll): Keep text hidden
+            // 2. The "Reveal" Phase (30% to 80% scroll): Animate in
+            
+            if (progress < 0.2) {
+                // Reset to hidden
+                ctaText.style.opacity = '0';
+                ctaText.style.filter = 'blur(20px)';
+                ctaText.style.transform = 'scale(0.8) translateY(50px)';
+            } else if (progress >= 0.2 && progress <= 0.85) {
+                // Normalize progress between 0.2 and 0.85 to be 0 to 1
+                const localProgress = (progress - 0.2) / 0.65; 
+                
+                // Ease the values
+                const opacity = Math.min(1, localProgress * 1.5);
+                const blur = Math.max(0, 20 - (localProgress * 20));
+                const scale = 0.8 + (localProgress * 0.2); // Go from 0.8 to 1.0
+                const y = 50 - (localProgress * 50); // Go from 50px to 0px
+
+                ctaText.style.opacity = opacity;
+                ctaText.style.filter = `blur(${blur}px)`;
+                ctaText.style.transform = `scale(${scale}) translateY(${y}px)`;
+            } else if (progress > 0.85) {
+                // Keep it visible as footer approaches
+                ctaText.style.opacity = '1';
+                ctaText.style.filter = 'blur(0px)';
+                ctaText.style.transform = 'scale(1) translateY(0px)';
+            }
+
+            requestAnimationFrame(animateCta);
         }
-        window.addEventListener('scroll', updateNav);
-        setTimeout(updateNav, 100);
-
-        // --- NEW: Enhanced Copy Animation ---
-        const copyBtn = document.getElementById('copyBtn');
-        const commandText = document.getElementById('commandText');
-        const copyFeedback = document.getElementById('copyFeedback');
         
-        copyBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(commandText.innerText).then(() => {
-                // Visual State Change
-                copyBtn.classList.add('copied');
-                
-                // Swap Text
-                const originalText = commandText.innerText;
-                commandText.innerText = "Copied to clipboard!";
-                
-                // Swap Icon manually (Lucide doesn't auto-update without re-running)
-                const originalIcon = copyFeedback.innerHTML;
-                // Create a Check icon SVG string
-                copyFeedback.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-                copyFeedback.style.opacity = "1";
-
-                setTimeout(() => {
-                    commandText.innerText = originalText;
-                    copyBtn.classList.remove('copied');
-                    copyFeedback.innerHTML = originalIcon; // Restore original SVG
-                    copyFeedback.style.opacity = "0.5";
-                }, 2000);
-            });
-        });
+        // Start the loop
+        animateCta();
     </script>
 </body>
 </html>
